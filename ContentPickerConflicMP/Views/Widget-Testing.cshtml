@@ -1,0 +1,41 @@
+﻿@model dynamic
+@inject OrchardCore.ContentManagement.Display.IContentItemDisplayManager ContentItemDisplayManager
+@inject IUpdateModelAccessor UpdateModelAccessor
+@inject OrchardCore.Markdown.Services.IMarkdownService MarkdownService
+
+@{
+    string htmlSectionDiscription = null;
+    var contentItem = Model.ContentItem as ContentItem;
+    var contentItemIds = Model.ContentItem.Content.Testing.ContentItemPicker.ContentItemIds;
+
+    foreach (var contentItemId in contentItemIds)
+    {
+        Orchard.GetContentItemByIdAsync(contentItemId);
+    }
+    var markdownBodyPart = (string)contentItem.Content.MarkdownBodyPart.Markdown;
+    if (markdownBodyPart != null)
+    {
+        htmlSectionDiscription = MarkdownService.ToHtml(markdownBodyPart);
+    }
+
+}
+
+<section class="carousel-with-summary">
+    <div class="container">
+        <div>
+            <h2>@(contentItem.DisplayText)</h2>
+            <text>@(Html.Raw(htmlSectionDiscription))</text>
+            <div class="owl-nav">
+                <a href="#" class="owl-prev" aria-label="Previous"><i class="fa-light fa-arrow-left-long fa-3x"></i></a>
+                <a href="#" class="owl-next" aria-label="Next"><i class="fa-light fa-arrow-right-long fa-3x"></i></a>
+            </div>
+        </div>
+        <div class="owl-carousel max-2-items">
+            @foreach (var card in Model.Content.BagPart.BagPart.ContentItems)
+            {
+                var cardShape = await ContentItemDisplayManager.BuildDisplayAsync(card, UpdateModelAccessor.ModelUpdater, "Detail");
+                @(await DisplayAsync(cardShape));
+            }
+        </div>
+    </div>
+</section>
