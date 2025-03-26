@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ContentPickerConflicMP\ContentPickerConflictTheme.csproj" />
+    <ProjectReference Include="..\ContentPickerConflicTheme\ContentPickerConflictTheme.csproj" />
   </ItemGroup>
 
 </Project>
